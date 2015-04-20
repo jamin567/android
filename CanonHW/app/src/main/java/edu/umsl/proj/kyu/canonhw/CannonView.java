@@ -91,6 +91,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         Log.e("Banana", "CannonView.CannonView");
         activity = (Activity) context; // store reference to MainActivity
 
+
         // register SurfaceHolder.Callback listener
         getHolder().addCallback(this);
 
@@ -199,6 +200,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
         if (gameOver) // starting a new game after the last game ended
         {
+            timeLeft = 10;
             gameOver = false;
             cannonThread = new CannonThread(getHolder(), this); // create thread
             cannonThread.start(); // start the game loop thread
@@ -208,10 +210,13 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
     // called when surface is first created
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+
         Log.e("Banana", "CannonView.surfaceCreated");
         if (!dialogIsDisplayed) {
             cannonThread = new CannonThread(holder, this); // create thread
             cannonThread.setRunning(true); // start game running
+            timeLeft = 9999;
+            showAboutDialog(R.string.title);
             cannonThread.start(); // start the game loop thread
         }
     }
@@ -547,6 +552,45 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
                                 R.string.results_format, shotsFired, totalElapsedTime));
                         builder.setPositiveButton(R.string.reset_game,
                                 new DialogInterface.OnClickListener() {
+                                    // called when "Reset Game" Button is pressed
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialogIsDisplayed = false;
+                                        newGame(); // set up and start a new game
+                                    }
+                                } // end anonymous inner class
+                        ); // end call to setPositiveButton
+
+                        return builder.create(); // return the AlertDialog
+                    } // end method onCreateDialog
+                }; // end DialogFragment anonymous inner class
+
+        // in GUI thread, use FragmentManager to display the DialogFragment
+        activity.runOnUiThread(
+                new Runnable() {
+                    public void run() {
+                        dialogIsDisplayed = true;
+                        gameResult.setCancelable(false); // modal dialog
+                        gameResult.show(activity.getFragmentManager(), "results");
+                    }
+                } // end Runnable
+        ); // end call to runOnUiThread
+    } // end method showGameOverDialog
+
+private void showAboutDialog(final int messageId) {
+        Log.e("Banana", "CannonView.showAboutDialog");
+        // DialogFragment to display quiz stats and start new quiz
+        final DialogFragment gameResult = new DialogFragment() {
+                    // create an AlertDialog and return it
+                    @Override
+                    public Dialog onCreateDialog(Bundle bundle) {
+                        // create dialog displaying String resource for messageId
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(getResources().getString(messageId));
+
+                        // display contents
+                        builder.setMessage(getResources().getString(R.string.content));
+                        builder.setPositiveButton(R.string.start_game, new DialogInterface.OnClickListener() {
                                     // called when "Reset Game" Button is pressed
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
