@@ -229,7 +229,47 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         //Log.e("Banana", "CannonView.updatePositions");s
         double interval = elapsedTimeMS / 1000.0; // convert to seconds
 
+        if (cannonballOnScreen && !cannonball2OnScreen)
+            cannonballFire(interval);
+        else if (!cannonballOnScreen && cannonball2OnScreen)
+            cannonball2Fire(interval);
+         else if (cannonballOnScreen && cannonball2OnScreen) {
+            cannonballFire(interval);
+            cannonball2Fire(interval);
+        }
 
+        // update the blocker's position
+        double blockerUpdate = interval * blockerVelocity;
+        blocker.start.y += blockerUpdate;
+        blocker.end.y += blockerUpdate;
+
+        // update the target's position
+        double targetUpdate = interval * targetVelocity;
+        target.start.y += targetUpdate;
+        target.end.y += targetUpdate;
+
+        // if the blocker hit the top or bottom, reverse direction
+        if (blocker.start.y < 0 || blocker.end.y > screenHeight)
+            blockerVelocity *= -1;
+
+        // if the target hit the top or bottom, reverse direction
+        if (target.start.y < 0 || target.end.y > screenHeight)
+            targetVelocity *= -1;
+
+        timeLeft -= interval; // subtract from time left
+
+        // if the timer reached zero
+        if (timeLeft <= 0.0) {
+            timeLeft = 0.0;
+            gameOver = true; // the game is over
+            cannonThread.setRunning(false); // terminate thread
+            showGameOverDialog(R.string.lose); // show the losing dialog
+        }
+    } // end method updatePositions
+
+
+    // shooting cannonball1
+    public void cannonballFire (double interval) {
         // update cannonball position
         cannonball.x += interval * cannonballVelocityX;
         cannonball.y += interval * cannonballVelocityY;
@@ -281,6 +321,9 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
+    }
+    // shooting cannonball2
+    public void cannonball2Fire (double interval) {
         if (cannonball2OnScreen) {
             // update cannonball position
             cannonball2.x += interval * cannonball2VelocityX;
@@ -333,35 +376,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
-
-        // update the blocker's position
-        double blockerUpdate = interval * blockerVelocity;
-        blocker.start.y += blockerUpdate;
-        blocker.end.y += blockerUpdate;
-
-        // update the target's position
-        double targetUpdate = interval * targetVelocity;
-        target.start.y += targetUpdate;
-        target.end.y += targetUpdate;
-
-        // if the blocker hit the top or bottom, reverse direction
-        if (blocker.start.y < 0 || blocker.end.y > screenHeight)
-            blockerVelocity *= -1;
-
-        // if the target hit the top or bottom, reverse direction
-        if (target.start.y < 0 || target.end.y > screenHeight)
-            targetVelocity *= -1;
-
-        timeLeft -= interval; // subtract from time left
-
-        // if the timer reached zero
-        if (timeLeft <= 0.0) {
-            timeLeft = 0.0;
-            gameOver = true; // the game is over
-            cannonThread.setRunning(false); // terminate thread
-            showGameOverDialog(R.string.lose); // show the losing dialog
-        }
-    } // end method updatePositions
+    }
 
 
     // draws the game to the given Canvas
