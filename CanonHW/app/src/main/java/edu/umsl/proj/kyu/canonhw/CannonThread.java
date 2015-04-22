@@ -9,7 +9,7 @@ public class CannonThread extends Thread {
     private SurfaceHolder surfaceHolder; // for manipulating canvas
     private CannonView cannonView; // for manipulating canvas
     private boolean threadIsRunning = true; // running by default
-
+    private boolean mPaused;
     // initializes the surface holder
     public CannonThread(SurfaceHolder holder, CannonView cannonView) {
         Log.e("Banana", "CannonThread.CannonThread");
@@ -38,6 +38,13 @@ public class CannonThread extends Thread {
 
                 // lock the surfaceHolder for drawing
                 synchronized (surfaceHolder) {
+                    while(mPaused) {
+                        try {
+                            surfaceHolder.wait();
+                        } catch (InterruptedException e){
+
+                        }
+                    }
                     long currentTime = System.currentTimeMillis();
                     double elapsedTimeMS = currentTime - previousFrameTime;
                     cannonView.totalElapsedTime += elapsedTimeMS / 1000.0;
@@ -53,4 +60,20 @@ public class CannonThread extends Thread {
             }
         } // end while
     } // end method run
+
+    public void onPause() {
+        synchronized (surfaceHolder) {
+            mPaused = true;
+        }
+    }
+
+    /**
+     * Call this on resume.
+     */
+    public void onResume() {
+        synchronized (surfaceHolder) {
+            mPaused = false;
+            surfaceHolder.notifyAll();
+        }
+    }
 } // end nested class CannonThread

@@ -19,6 +19,9 @@ import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
+
+import java.util.Random;
 
 public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
     // constants for game play
@@ -45,6 +48,15 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
     private int blockerEnd; // blocker bottom-edge distance from top
     private int initialBlockerVelocity; // initial blocker speed multiplier
     private float blockerVelocity; // blocker speed multiplier during game
+
+    private Line blocker2; // start and end points of the blocker
+    private int blocker2Distance; // blocker distance from left
+    private int blocker2Beginning; // blocker top-edge distance from top
+    private int blocker2End; // blocker bottom-edge distance from top
+    private int initialBlocker2Velocity; // initial blocker speed multiplier
+    private float blocker2Velocity; // blocker speed multiplier during game
+
+
     private Line target; // start and end points of the target
     private int targetDistance; // target distance from left
     private int targetBeginning; // target distance from top
@@ -82,8 +94,11 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
     private Paint cannonball2Paint; // Paint used to draw the cannonball
     private Paint cannonPaint; // Paint used to draw the cannon
     private Paint blockerPaint; // Paint used to draw the blocker
+    private Paint blocker2Paint; // Paint used to draw the blocker
     private Paint targetPaint; // Paint used to draw the target
     private Paint backgroundPaint; // Paint used to clear the drawing area
+
+
 
     // public constructor
     public CannonView(Context context, AttributeSet attrs) {
@@ -91,12 +106,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         Log.e("Banana", "CannonView.CannonView");
         activity = (Activity) context; // store reference to MainActivity
 
-
         // register SurfaceHolder.Callback listener
         getHolder().addCallback(this);
 
         // initialize Lines and Point representing game items
         blocker = new Line(); // create the blocker as a Line /cho : additional blocker?
+        blocker2 = new Line(); // create the blocker as a Line /cho : additional blocker?
         target = new Line(); // create the target as a Line
         cannonball = new Point(); // create the cannonball as a Point /cho : resize the ball?
         cannonball2 = new Point(); // create the cannonball as a Point /cho : resize the ball?
@@ -123,10 +138,13 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         cannonballPaint = new Paint();
         cannonball2Paint = new Paint();
         blockerPaint = new Paint(); // cho : additional blocker?
+        blocker2Paint = new Paint(); // cho : additional blocker?
         targetPaint = new Paint();  // cho : increase or decrease the target?
         backgroundPaint = new Paint();
     } // end CannonView
-
+    Random r = new Random();
+    boolean flag = true;
+    boolean flag2 = true;
     // called by surfaceChanged when the size of the SurfaceView changes,
     // such as when it's first added to the View hierarchy
     @Override
@@ -147,12 +165,20 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         lineWidth = w / 24; // target and blocker 1/24 screen width
 
         // configure instance variables related to the blocker
-        blockerDistance = w * 5 / 8; // blocker 5/8 screen width from left
-        blockerBeginning = h / 8; // distance from top 1/8 screen height
-        blockerEnd = h * 3 / 8; // distance from top 3/8 screen height
-        initialBlockerVelocity = h / 2; // initial blocker speed multiplier
+        blockerDistance = w * 6 / 8; // blocker 5/8 screen width from left // getting closer num < 5
+        blockerBeginning = h / 8; // distance from top 1/8 screen height // longer dim > 8
+        blockerEnd = h * 3 / 8; // distance from top 3/8 screen height  // shorter num < 3
+        initialBlockerVelocity = h * 2 / 2; // initial blocker speed multiplier
         blocker.start = new Point(blockerDistance, blockerBeginning);
         blocker.end = new Point(blockerDistance, blockerEnd);
+
+         // configure instance variables related to the blocker
+        blocker2Distance = w * 4 / 8; // blocker 5/8 screen width from left // getting closer num < 5
+        blocker2Beginning = h / 8; // distance from top 1/8 screen height // longer dim > 8
+        blocker2End = h * 3 / 8; // distance from top 3/8 screen height  // shorter num < 3
+        initialBlocker2Velocity = h / 2; // initial blocker speed multiplier
+        blocker2.start = new Point(blocker2Distance, blocker2Beginning);
+        blocker2.end = new Point(blocker2Distance, blocker2End);
 
         // configure instance variables related to the target
         targetDistance = w * 7 / 8; // target 7/8 screen width from left
@@ -171,11 +197,16 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         textPaint.setAntiAlias(true); // smoothes the text
         cannonPaint.setStrokeWidth(lineWidth * 1.5f); // set line thickness
         blockerPaint.setStrokeWidth(lineWidth); // set line thickness
+        blocker2Paint.setStrokeWidth(lineWidth); // set line thickness
         targetPaint.setStrokeWidth(lineWidth); // set line thickness
         backgroundPaint.setColor(Color.WHITE); // set background color
 
         newGame(); // set up and start a new game
+
     } // end method onSizeChanged
+
+
+
 
     // reset all the screen elements and start a new game
     public void newGame() {
@@ -186,6 +217,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
         targetPiecesHit = 0; // no target pieces have been hit
         blockerVelocity = initialBlockerVelocity; // set initial velocity /cho : slow motion?
+        blocker2Velocity = initialBlocker2Velocity; // set initial velocity /cho : slow motion?
         targetVelocity = initialTargetVelocity; // set initial velocity / cho : slow motion?
         timeLeft = 10; // start the countdown at 10 seconds
         cannonballOnScreen = false; // the cannonball is not on the screen
@@ -195,8 +227,20 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         // set the start and end Points of the blocker and target
         blocker.start.set(blockerDistance, blockerBeginning);
         blocker.end.set(blockerDistance, blockerEnd);
+        blocker2.start.set(blocker2Distance, blocker2Beginning);
+        blocker2.end.set(blocker2Distance, blocker2End);
         target.start.set(targetDistance, targetBeginning);
         target.end.set(targetDistance, targetEnd);
+
+        if(flag == false) {
+            Log.e("Banana", "Randum power up reset!");
+            cannonballRadius += 5; // cannonball radius 1/36 screen width /cho : enlarge the ball?
+            cannonballSpeed -= 1000; // cannonball speed multiplier /cho : slow motion ?
+
+            cannonball2Radius += 5; // cannonball radius 1/36 screen width /cho : enlarge the ball?
+            cannonball2Speed -= 1000; // cannonball speed multiplier /cho : slow motion ?
+            flag = true;
+        }
 
         if (gameOver) // starting a new game after the last game ended
         {
@@ -215,7 +259,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         if (!dialogIsDisplayed) {
             cannonThread = new CannonThread(holder, this); // create thread
             cannonThread.setRunning(true); // start game running
-            timeLeft = 9999;
             showAboutDialog(R.string.title);
             cannonThread.start(); // start the game loop thread
         }
@@ -227,11 +270,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         Log.e("Banana", "CannonView.surfaceChanged");
     }
 
+    int ran = 0;
     //Object Drawing every interval//
 //-----------------------------------------------------------------------------------------//
     // called repeatedly by the CannonThread to update game elements
     protected void updatePositions(double elapsedTimeMS) { //cho : mutiple cannon ball?
-        //Log.e("Banana", "CannonView.updatePositions");s
+        //Log.e("Banana", "CannonView.updatePositions");
         double interval = elapsedTimeMS / 1000.0; // convert to seconds
 
         if (cannonballOnScreen && !cannonball2OnScreen)
@@ -243,10 +287,36 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
             cannonball2Fire(interval);
         }
 
+
+        if (timeLeft < 5 && flag2 == true) {
+            Log.e("Banana", "5 Second Left Alert");
+
+            //Toast.makeText(getContext(), "5 seconds left", Toast.LENGTH_LONG).show();
+            flag2 = false;
+        }
+
+
+        ran = r.nextInt(100 - 1) + 1;
+        if (timeLeft < 7 && ran > 97 && flag == true) {
+            Log.e("Banana", "Randum power up!");
+
+            cannonballRadius -= 5; // cannonball radius 1/36 screen width /cho : enlarge the ball?
+            cannonballSpeed += 1000; // cannonball speed multiplier /cho : slow motion ?
+
+            cannonball2Radius -= 5; // cannonball radius 1/36 screen width /cho : enlarge the ball?
+            cannonball2Speed += 1000; // cannonball speed multiplier /cho : slow motion ?
+
+            flag= false;
+        }
         // update the blocker's position
         double blockerUpdate = interval * blockerVelocity;
         blocker.start.y += blockerUpdate;
         blocker.end.y += blockerUpdate;
+
+        // update the blocker's position
+        double blocker2Update = interval * blocker2Velocity;
+        blocker2.start.y += blocker2Update;
+        blocker2.end.y += blocker2Update;
 
         // update the target's position
         double targetUpdate = interval * targetVelocity;
@@ -257,9 +327,17 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         if (blocker.start.y < 0 || blocker.end.y > screenHeight)
             blockerVelocity *= -1;
 
+
+        // if the blocker hit the top or bottom, reverse direction
+        if (blocker2.start.y < 0 || blocker2.end.y > screenHeight)
+            blocker2Velocity *= -1;
+
+
         // if the target hit the top or bottom, reverse direction
         if (target.start.y < 0 || target.end.y > screenHeight)
             targetVelocity *= -1;
+
+
 
         timeLeft -= interval; // subtract from time left
 
@@ -283,7 +361,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         if (cannonball.x + cannonballRadius > blockerDistance &&
                 cannonball.x - cannonballRadius < blockerDistance &&
                 cannonball.y + cannonballRadius > blocker.start.y &&
-                cannonball.y - cannonballRadius < blocker.end.y) {
+                cannonball.y - cannonballRadius < blocker.end.y
+                ||
+                cannonball.x + cannonballRadius > blocker2Distance &&
+                        cannonball.x - cannonballRadius < blocker2Distance &&
+                        cannonball.y + cannonballRadius > blocker2.start.y &&
+                        cannonball.y - cannonballRadius < blocker2.end.y) {
             cannonballVelocityX *= -1; // reverse cannonball's direction
             timeLeft -= MISS_PENALTY; // penalize the user
 
@@ -338,7 +421,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
             if (cannonball2.x + cannonballRadius > blockerDistance &&
                     cannonball2.x - cannonballRadius < blockerDistance &&
                     cannonball2.y + cannonballRadius > blocker.start.y &&
-                    cannonball2.y - cannonballRadius < blocker.end.y) {
+                    cannonball2.y - cannonballRadius < blocker.end.y
+                    ||
+                    cannonball2.x + cannonballRadius > blocker2Distance &&
+                            cannonball2.x - cannonballRadius < blocker2Distance &&
+                            cannonball2.y + cannonballRadius > blocker2.start.y &&
+                            cannonball2.y - cannonballRadius < blocker2.end.y) {
                 cannonball2VelocityX *= -1; // reverse cannonball's direction
                 timeLeft -= MISS_PENALTY; // penalize the user
 
@@ -388,8 +476,9 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
     public void drawGameElements(Canvas canvas) {
         //Log.e("Banana", "CannonView.drawGameElements");
         // clear the background
-        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(),
-                backgroundPaint);
+        canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
+
+
 
         // display time remaining
         canvas.drawText(getResources().getString(
@@ -402,16 +491,14 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
             canvas.drawCircle(cannonball2.x, cannonball2.y, cannonball2Radius,cannonball2Paint);
 
         // draw the cannon barrel
-        canvas.drawLine(0, screenHeight / 2, barrelEnd.x, barrelEnd.y,
-                cannonPaint);
+        canvas.drawLine(0, screenHeight / 2, barrelEnd.x, barrelEnd.y, cannonPaint);
 
         // draw the cannon base
-        canvas.drawCircle(0, (int) screenHeight / 2,
-                (int) cannonBaseRadius, cannonPaint);
+        canvas.drawCircle(0, (int) screenHeight / 2, (int) cannonBaseRadius, cannonPaint);
 
         // draw the blocker
-        canvas.drawLine(blocker.start.x, blocker.start.y, blocker.end.x,
-                blocker.end.y, blockerPaint);
+        canvas.drawLine(blocker.start.x, blocker.start.y, blocker.end.x, blocker.end.y, blockerPaint);
+        canvas.drawLine(blocker2.start.x, blocker2.start.y, blocker2.end.x, blocker2.end.y, blocker2Paint);
 
         Point currentPoint = new Point(); // start of current target section
 
@@ -444,7 +531,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
     // called when the user touches the screen in this Activity
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        Log.e("Banana", "CannonView.onTouchEvent");
+        //Log.e("Banana", "CannonView.onTouchEvent");
         // get int representing the type of action which caused this event
         int action = e.getAction();
 
@@ -459,7 +546,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
         // if a cannonball is already on the screen /cho :  mutiple balls?
         if (!cannonballOnScreen)  {
-            Log.e("Banana", "CannonView.fireCannonball");
+            //Log.e("Banana", "CannonView.fireCannonball");
             double angle = alignCannon(event); // get the cannon barrel's angle
 
             // move the cannonball to be inside the cannon
@@ -590,11 +677,13 @@ private void showAboutDialog(final int messageId) {
 
                         // display contents
                         builder.setMessage(getResources().getString(R.string.content));
+                        cannonThread.onPause();
                         builder.setPositiveButton(R.string.start_game, new DialogInterface.OnClickListener() {
                                     // called when "Reset Game" Button is pressed
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialogIsDisplayed = false;
+                                        cannonThread.onResume();
                                         newGame(); // set up and start a new game
                                     }
                                 } // end anonymous inner class
