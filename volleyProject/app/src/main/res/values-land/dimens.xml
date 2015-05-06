@@ -1,0 +1,13 @@
+<resources>
+	<dimen name="splash_globe_width">240dp</dimen>
+	<dimen name="splash_globe_height">219dp</dimen>
+	<dimen name="splash_wordmark_width">240dp</dimen>
+	<dimen name="splash_wordmark_height">40dp</dimen>
+
+	<dimen name="search_globe_width">200dp</dimen>
+	<dimen name="search_globe_height">182dp</dimen>
+	<dimen name="search_wordmark_width">200dp</dimen>
+	<dimen name="search_wordmark_height">34dp</dimen>
+
+	<dimen name="wordmark_margin_top">18dp</dimen>
+</resources>

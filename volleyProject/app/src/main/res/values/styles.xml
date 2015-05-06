@@ -1,0 +1,14 @@
+<resources>
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light">
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/accentColor</item>
+		<item name="actionBarStyle">@style/ActionBarTheme</item>
+	</style>
+
+	<style name="ActionBarTheme" parent="@style/Widget.AppCompat.Light.ActionBar">
+		<item name="background">@color/colorPrimary</item>
+		<item name="android:background">@color/colorPrimary</item>
+	</style>
+</resources>
