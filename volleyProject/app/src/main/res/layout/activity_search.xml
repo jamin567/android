@@ -5,26 +5,63 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
     <LinearLayout android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="444dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_gravity="bottom">
         <ImageView
             android:id="@+id/globe_image"
             android:layout_width="@dimen/search_globe_width"
             android:layout_height="@dimen/search_globe_height"
-            android:src="@drawable/wikipedia_globe" />
+            android:src="@drawable/logo" />
         <ImageView
             android:id="@+id/word_image"
             android:layout_width="@dimen/search_wordmark_width"
             android:layout_height="@dimen/search_wordmark_height"
-            android:src="@drawable/wikipedia_wordmark"
+            android:src="@drawable/name"
             android:layout_marginTop="@dimen/wordmark_margin_top" />
+
     </LinearLayout>
+
     <edu.umsl.proj.kyu.volleyproject.AutofitRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="489dp"
         android:padding="@dimen/item_margin"
         android:clipToPadding="false"
-        android:columnWidth="@dimen/column_width" />
+        android:columnWidth="@dimen/column_width"
+        android:layout_gravity="bottom" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="72dp">
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="77dp"
+                android:id="@+id/saveButton"
+                android:src="@drawable/image_button" />
+        </GridLayout>
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_weight="0.52"
+            android:layout_gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0%"
+            android:id="@+id/textView"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
 </FrameLayout>
