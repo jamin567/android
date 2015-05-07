@@ -20,7 +20,7 @@
             android:src="@drawable/wikipedia_wordmark"
             android:layout_marginTop="@dimen/wordmark_margin_top" />
     </LinearLayout>
-    <edu.umsl.proj.kyu.volleyproject.ui.AutofitRecyclerView
+    <edu.umsl.proj.kyu.volleyproject.AutofitRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

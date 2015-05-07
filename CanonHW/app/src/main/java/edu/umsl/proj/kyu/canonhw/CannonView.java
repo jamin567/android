@@ -259,6 +259,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         if (!dialogIsDisplayed) {
             cannonThread = new CannonThread(holder, this); // create thread
             cannonThread.setRunning(true); // start game running
+            timeLeft = 9999;
             showAboutDialog(R.string.title);
             cannonThread.start(); // start the game loop thread
         }
@@ -477,8 +478,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
         //Log.e("Banana", "CannonView.drawGameElements");
         // clear the background
         canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
-
-
 
         // display time remaining
         canvas.drawText(getResources().getString(

@@ -1,4 +1,4 @@
-package edu.umsl.proj.kyu.volleyproject.model;
+package edu.umsl.proj.kyu.volleyproject;
 
 
 import com.google.gson.Gson;

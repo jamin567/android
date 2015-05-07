@@ -1,4 +1,4 @@
-package edu.umsl.proj.kyu.volleyproject.activity;
+package edu.umsl.proj.kyu.volleyproject;
 
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -15,14 +15,7 @@ import android.widget.Toast;
 
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import edu.umsl.proj.kyu.volleyproject.R;
-import edu.umsl.proj.kyu.volleyproject.adapter.PageAdapter;
-import edu.umsl.proj.kyu.volleyproject.anim.HeroAnimation;
-import edu.umsl.proj.kyu.volleyproject.anim.WikipediaLogo;
-import edu.umsl.proj.kyu.volleyproject.model.Page;
-import edu.umsl.proj.kyu.volleyproject.model.Query;
-import edu.umsl.proj.kyu.volleyproject.volley.SearchRequest;
-import edu.umsl.proj.kyu.volleyproject.volley.Volley;
+
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;

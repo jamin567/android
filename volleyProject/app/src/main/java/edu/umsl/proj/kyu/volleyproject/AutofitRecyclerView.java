@@ -1,4 +1,4 @@
-package edu.umsl.proj.kyu.volleyproject.ui;
+package edu.umsl.proj.kyu.volleyproject;
 
 import android.content.Context;
 import android.content.res.TypedArray;

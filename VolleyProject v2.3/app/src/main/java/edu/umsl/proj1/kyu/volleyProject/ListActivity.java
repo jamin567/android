@@ -1,6 +1,5 @@
 package edu.umsl.proj1.kyu.volleyProject;
 
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,9 +20,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 public class ListActivity extends android.app.ListActivity {
-
     // name of SharedPreferences XML file that stores the saved searches
     private static final String SEARCHES = "searches";
 
@@ -137,7 +134,6 @@ public class ListActivity extends android.app.ListActivity {
             Uri uri = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
-
         }
     };//TODO
 
@@ -165,7 +161,6 @@ public class ListActivity extends android.app.ListActivity {
                         case 2: //Delete
                             deleteSearch(tag);
                             break;
-
                     }
                 }
             });

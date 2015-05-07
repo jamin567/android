@@ -1,4 +1,4 @@
-package edu.umsl.proj.kyu.volleyproject.adapter;
+package edu.umsl.proj.kyu.volleyproject;
 
 
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import edu.umsl.proj.kyu.volleyproject.R;
-import edu.umsl.proj.kyu.volleyproject.model.Page;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.squareup.picasso.Picasso;

@@ -1,4 +1,4 @@
-package edu.umsl.proj.kyu.volleyproject.anim;
+package edu.umsl.proj.kyu.volleyproject;
 
 public class WikipediaLogo {
 	public static final String GLOBE = "GLOBE";

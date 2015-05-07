@@ -13,8 +13,7 @@ public class CannonGameFragment extends Fragment {
 
     // called when Fragment's view needs to be created
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         Log.e("Banana", "CannonGameFragment.onCreateView");
         View view = inflater.inflate(R.layout.fragment_cannon_game, container, false); // inflate cannon game layout into view

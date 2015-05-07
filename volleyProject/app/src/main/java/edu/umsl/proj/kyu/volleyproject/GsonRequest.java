@@ -1,4 +1,4 @@
-package edu.umsl.proj.kyu.volleyproject.volley;
+package edu.umsl.proj.kyu.volleyproject;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -9,7 +9,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import edu.umsl.proj.kyu.volleyproject.model.Query;
+import edu.umsl.proj.kyu.volleyproject.Query;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;

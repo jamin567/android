@@ -1,4 +1,4 @@
-package edu.umsl.proj.kyu.volleyproject.activity;
+package edu.umsl.proj.kyu.volleyproject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,10 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-
-import edu.umsl.proj.kyu.volleyproject.R;
-import edu.umsl.proj.kyu.volleyproject.anim.HeroAnimation;
-import edu.umsl.proj.kyu.volleyproject.anim.WikipediaLogo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
